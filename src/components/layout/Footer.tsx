@@ -117,16 +117,22 @@ export default function Footer() {
                 href="https://stepslab.vercel.app"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary-300 hover:text-primary-200 transition-colors"
+                className="text-white/90 underline underline-offset-4 decoration-white/40 hover:decoration-white/70 hover:text-white transition-colors"
               >
                 STEPS LAB
               </a>
             </p>
             <div className="flex flex-col md:flex-row items-center justify-between w-full md:w-auto md:justify-end space-y-2 md:space-y-0 md:space-x-6">
-              <a href="/privacy" className="text-sm text-neutral-400 hover:text-white transition-colors">
+              <a
+                href="/privacy"
+                className="text-sm text-neutral-300 underline underline-offset-4 decoration-neutral-500 hover:decoration-white/70 hover:text-white transition-colors min-h-[48px] inline-flex items-center"
+              >
                 {isUA ? 'Політика конфіденційності' : 'Privacy Policy'}
               </a>
-              <a href="/terms" className="text-sm text-neutral-400 hover:text-white transition-colors">
+              <a
+                href="/terms"
+                className="text-sm text-neutral-300 underline underline-offset-4 decoration-neutral-500 hover:decoration-white/70 hover:text-white transition-colors min-h-[48px] inline-flex items-center"
+              >
                 {isUA ? 'Умови використання' : 'Terms of Use'}
               </a>
             </div>

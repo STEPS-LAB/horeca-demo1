@@ -25,7 +25,7 @@ const montserrat = Montserrat({
   weight: ['500'],
   display: 'swap',
   variable: '--font-montserrat',
-  preload: false,
+  preload: true,
   fallback: ['system-ui', 'sans-serif'],
 });
 

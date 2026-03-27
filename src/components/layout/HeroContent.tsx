@@ -8,8 +8,10 @@ type BookingBarComponent = BookingBarModule['default'];
 
 function BookingBarLazy({ onSearch }: { onSearch: (data: { checkIn: string; checkOut: string; guests: number }) => void }) {
   const [BookingBar, setBookingBar] = useState<BookingBarComponent | null>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
+    if (!shouldLoad) return;
     let cancelled = false;
     const w = window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number };
 
@@ -20,19 +22,29 @@ function BookingBarLazy({ onSearch }: { onSearch: (data: { checkIn: string; chec
     };
 
     if (typeof w.requestIdleCallback === 'function') {
-      w.requestIdleCallback(load, { timeout: 1500 });
+      // Avoid impacting initial Lighthouse run; load strictly when user asked.
+      w.requestIdleCallback(load);
     } else {
-      const t = window.setTimeout(load, 800);
+      const t = window.setTimeout(load, 0);
       return () => window.clearTimeout(t);
     }
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [shouldLoad]);
 
   if (!BookingBar) {
-    return <div className="h-[72px] rounded-sm bg-white/10 animate-pulse" />;
+    return (
+      <button
+        type="button"
+        onClick={() => setShouldLoad(true)}
+        className="w-full sm:w-auto min-h-[48px] px-6 py-3 rounded-sm bg-white/10 text-white/95 border border-white/30 backdrop-blur
+                   hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-neutral-900/20"
+      >
+        Перевірити доступність
+      </button>
+    );
   }
 
   return <BookingBar onSearch={onSearch} />;

@@ -3,29 +3,99 @@
 import { motion } from 'framer-motion';
 import { useIntersectionObserver } from '@/lib/hooks';
 import { Clock, Users, Volleyball } from 'lucide-react';
-import { FaBicycle, FaMotorcycle, FaSailboat, FaFish, FaFutbol, FaBath } from 'react-icons/fa6';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
 import Image from 'next/image';
 
+type IconProps = { className?: string };
+
+function BikeIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="6.5" cy="17.5" r="3.5" />
+      <circle cx="17.5" cy="17.5" r="3.5" />
+      <path d="M6.5 17.5 10 10h4l-2 4" />
+      <path d="M14 6h2l2 4" />
+      <path d="M10 10 8.5 6H6" />
+    </svg>
+  );
+}
+
+function BathIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M6 12V7a2 2 0 0 1 2-2h2" />
+      <path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3Z" />
+      <path d="M8 19v2" />
+      <path d="M16 19v2" />
+    </svg>
+  );
+}
+
+function AtvIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="7" cy="17" r="2.5" />
+      <circle cx="17" cy="17" r="2.5" />
+      <path d="M6 17h5l2-6h5" />
+      <path d="M9 11h4l1 3" />
+      <path d="M16 7h3l2 4" />
+    </svg>
+  );
+}
+
+function BoatIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 3v9" />
+      <path d="M12 4l6 5H12" />
+      <path d="M3 15l9 4 9-4-9-3-9 3Z" />
+      <path d="M5 20h14" />
+    </svg>
+  );
+}
+
+function FishIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12s3-5 9-5 9 5 9 5-3 5-9 5-9-5-9-5Z" />
+      <path d="M21 12l-3-3 1 3-1 3 3-3Z" />
+      <circle cx="10" cy="11" r="1" />
+    </svg>
+  );
+}
+
+function FootballIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7l2.5 2-1 3h-3l-1-3L12 7Z" />
+      <path d="M7.5 10.5l2-1.5" />
+      <path d="M16.5 10.5l-2-1.5" />
+      <path d="M9 16l-2 1" />
+      <path d="M15 16l2 1" />
+    </svg>
+  );
+}
+
 const activities = {
   ua: [
-    { icon: FaBicycle, key: 'cycling', name: 'Велопрогулянки', description: 'Прогулянки околицями курорту', image: '/images/velo.webp', duration: '250 грн/год', level: 'Будь-який рівень' },
-    { icon: FaBath, key: 'banya', name: 'Лазня та чан', description: 'Лазня на дровах та гарячий чан', image: '/images/laznya.webp', duration: 'від 800 грн', level: 'Комплекс 2600 грн' },
-    { icon: FaMotorcycle, key: 'atv', name: 'Квадроцикли', description: 'Екстремальне катання в лісі', image: '/images/quadro.webp', duration: 'від 1600 грн', level: 'Екстрим' },
-    { icon: FaSailboat, key: 'boats', name: 'Човни та катамарани', description: 'Прогулянки озером', image: '/images/boats.webp', duration: 'від 150 грн', level: 'Будь-який рівень' },
-    { icon: FaFish, key: 'fishing', name: 'Риболовля', description: 'Любительська та спортивна', image: '/images/fishing.webp', duration: 'від 500 грн', level: 'Будь-який рівень' },
+    { icon: BikeIcon, key: 'cycling', name: 'Велопрогулянки', description: 'Прогулянки околицями курорту', image: '/images/velo.webp', duration: '250 грн/год', level: 'Будь-який рівень' },
+    { icon: BathIcon, key: 'banya', name: 'Лазня та чан', description: 'Лазня на дровах та гарячий чан', image: '/images/laznya.webp', duration: 'від 800 грн', level: 'Комплекс 2600 грн' },
+    { icon: AtvIcon, key: 'atv', name: 'Квадроцикли', description: 'Екстремальне катання в лісі', image: '/images/quadro.webp', duration: 'від 1600 грн', level: 'Екстрим' },
+    { icon: BoatIcon, key: 'boats', name: 'Човни та катамарани', description: 'Прогулянки озером', image: '/images/boats.webp', duration: 'від 150 грн', level: 'Будь-який рівень' },
+    { icon: FishIcon, key: 'fishing', name: 'Риболовля', description: 'Любительська та спортивна', image: '/images/fishing.webp', duration: 'від 500 грн', level: 'Будь-який рівень' },
     { icon: Volleyball, key: 'tennis', name: 'Теніс', description: 'Тенісний корт', image: '/images/tennis.webp', duration: '400 грн/год', level: 'Будь-який рівень' },
-    { icon: FaFutbol, key: 'football', name: 'Футбол', description: 'Поле для мініфутболу', image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&q=80', duration: 'Безкоштовно', level: 'Будь-який рівень' },
+    { icon: FootballIcon, key: 'football', name: 'Футбол', description: 'Поле для мініфутболу', image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&q=80', duration: 'Безкоштовно', level: 'Будь-який рівень' },
   ],
   en: [
-    { icon: FaBicycle, key: 'cycling', name: 'Cycling', description: 'Rides around the resort', image: '/images/velo.webp', duration: '250 UAH/hour', level: 'Any level' },
-    { icon: FaBath, key: 'banya', name: 'Banya & Hot Tub', description: 'Wood-fired sauna and hot tub', image: '/images/laznya.webp', duration: 'from 800 UAH', level: 'Complex 2600 UAH' },
-    { icon: FaMotorcycle, key: 'atv', name: 'ATVs', description: 'Extreme forest riding', image: '/images/quadro.webp', duration: 'from 1600 UAH', level: 'Extreme' },
-    { icon: FaSailboat, key: 'boats', name: 'Boats & Catamarans', description: 'Lake cruises', image: '/images/boats.webp', duration: 'from 150 UAH', level: 'Any level' },
-    { icon: FaFish, key: 'fishing', name: 'Fishing', description: 'Amateur and sport fishing', image: '/images/fishing.webp', duration: 'from 500 UAH', level: 'Any level' },
+    { icon: BikeIcon, key: 'cycling', name: 'Cycling', description: 'Rides around the resort', image: '/images/velo.webp', duration: '250 UAH/hour', level: 'Any level' },
+    { icon: BathIcon, key: 'banya', name: 'Banya & Hot Tub', description: 'Wood-fired sauna and hot tub', image: '/images/laznya.webp', duration: 'from 800 UAH', level: 'Complex 2600 UAH' },
+    { icon: AtvIcon, key: 'atv', name: 'ATVs', description: 'Extreme forest riding', image: '/images/quadro.webp', duration: 'from 1600 UAH', level: 'Extreme' },
+    { icon: BoatIcon, key: 'boats', name: 'Boats & Catamarans', description: 'Lake cruises', image: '/images/boats.webp', duration: 'from 150 UAH', level: 'Any level' },
+    { icon: FishIcon, key: 'fishing', name: 'Fishing', description: 'Amateur and sport fishing', image: '/images/fishing.webp', duration: 'from 500 UAH', level: 'Any level' },
     { icon: Volleyball, key: 'tennis', name: 'Tennis', description: 'Tennis court and rental', image: '/images/tennis.webp', duration: '400 UAH/hour', level: 'Any level' },
-    { icon: FaFutbol, key: 'football', name: 'Football', description: 'Football field', image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&q=80', duration: 'Free', level: 'Any level' },
+    { icon: FootballIcon, key: 'football', name: 'Football', description: 'Football field', image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800&q=80', duration: 'Free', level: 'Any level' },
   ],
 };
 

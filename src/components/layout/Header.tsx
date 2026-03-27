@@ -149,7 +149,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
 
             {/* Mobile language switcher */}
             <div
-              className={`flex md:hidden h-9 items-center gap-1 rounded-sm p-0.5 ${
+              className={`flex md:hidden h-12 items-center gap-1 rounded-sm p-1 ${
                 useDarkHeader ? 'bg-neutral-200' : 'bg-white/10 backdrop-blur border border-white/30'
               }`}
               aria-label="Language switcher"
@@ -157,7 +157,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               {(['ua', 'en'] as const).map((code) => (
                 <button
                   key={code}
-                  className={`flex h-8 min-w-[2.5rem] items-center justify-center rounded-sm px-2 text-[11px] uppercase tracking-[0.14em] transition ${
+                  className={`flex h-12 min-w-[3rem] items-center justify-center rounded-sm px-3 text-[11px] uppercase tracking-[0.14em] transition ${
                     locale === code
                       ? 'bg-primary text-white'
                       : useDarkHeader ? 'text-neutral-600 hover:bg-neutral-300' : 'text-white/90 hover:bg-white/20'
@@ -180,7 +180,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
             <button
               type="button"
               onClick={handleOpenMenu}
-              className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded md:hidden"
+              className="flex h-12 w-12 flex-col items-center justify-center gap-1.5 rounded md:hidden"
               aria-label="Toggle menu"
               aria-expanded={menuMounted}
             >

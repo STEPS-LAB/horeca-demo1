@@ -31,6 +31,8 @@ export default function RestaurantSection() {
                   alt={isUA ? 'Ресторан' : 'Restaurant'}
                   fill
                   className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
               <div className="image-zoom-container relative aspect-square overflow-hidden rounded-sm">
@@ -39,6 +41,8 @@ export default function RestaurantSection() {
                   alt={isUA ? 'Авторська кухня' : 'Author\'s Cuisine'}
                   fill
                   className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
             </div>
@@ -49,6 +53,8 @@ export default function RestaurantSection() {
                   alt={isUA ? 'Інтер\'єр' : 'Interior'}
                   fill
                   className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
               <div className="image-zoom-container relative aspect-[3/4] overflow-hidden rounded-sm">
@@ -57,6 +63,8 @@ export default function RestaurantSection() {
                   alt={isUA ? 'Страви' : 'Dishes'}
                   fill
                   className="object-cover"
+                  loading="lazy"
+                  sizes="(max-width: 768px) 50vw, 25vw"
                 />
               </div>
             </div>

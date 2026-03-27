@@ -61,8 +61,7 @@ export default function RoomsSection() {
                       alt={room.name.ua}
                       fill
                       className="object-cover"
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                      priority={index === 0}
+                      loading="lazy"
                       sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     />
                   </div>

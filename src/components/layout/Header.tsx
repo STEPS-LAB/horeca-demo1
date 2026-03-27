@@ -99,7 +99,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 h-[4.5rem] min-h-[4.5rem] ${
           useDarkHeader
             ? 'bg-white/90 backdrop-blur-md shadow-sm'
-            : 'bg-transparent backdrop-blur-md'
+            : 'bg-transparent'
         }`}
       >
         <div className="container flex items-center justify-between h-[4.5rem] min-h-[4.5rem]">

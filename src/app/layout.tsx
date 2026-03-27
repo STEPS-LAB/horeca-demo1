@@ -1,13 +1,15 @@
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { Inter, Montserrat } from 'next/font/google';
+import dynamic from 'next/dynamic';
 import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
 import MainWrapper from '@/components/layout/MainWrapper';
-import ClientWidgets from '@/components/layout/ClientWidgets';
 import { LanguageProvider } from '@/lib/i18n/LanguageProvider';
 import { HeaderProvider } from '@/components/layout/HeaderContext';
 import '@/styles/globals.css';
+
+const Footer = dynamic(() => import('@/components/layout/Footer'));
+const ClientWidgets = dynamic(() => import('@/components/layout/ClientWidgets'));
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -40,14 +42,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="uk" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
-      <head>
-        <link
-          rel="preload"
-          href="/images/hero.webp"
-          as="image"
-          type="image/webp"
-        />
-      </head>
       <body className="antialiased font-sans">
         <LanguageProvider>
           <HeaderProvider>

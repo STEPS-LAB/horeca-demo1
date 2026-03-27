@@ -46,14 +46,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
     setMenuOpen(true);
   }, []);
 
-  const scrollToTop = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
-  }, []);
-
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 20);
     onScroll();

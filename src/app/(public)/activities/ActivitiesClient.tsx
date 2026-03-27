@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { Clock, Users, Volleyball } from 'lucide-react';
-import { FaBicycle, FaSpa, FaMotorcycle, FaSailboat, FaFish, FaFutbol, FaBath } from 'react-icons/fa6';
+import { FaBicycle, FaMotorcycle, FaSailboat, FaFish, FaFutbol, FaBath } from 'react-icons/fa6';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {

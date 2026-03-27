@@ -25,7 +25,7 @@ export function useIntersectionObserver<T extends HTMLElement>(
 ) {
   const [ref, setRef] = useState<T | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const { triggerOnce = true } = options;
+  const { triggerOnce = true, threshold, root, rootMargin } = options;
 
   useEffect(() => {
     if (!ref) return;
@@ -39,11 +39,11 @@ export function useIntersectionObserver<T extends HTMLElement>(
       } else if (!triggerOnce) {
         setIsVisible(false);
       }
-    }, options);
+    }, { threshold, root, rootMargin });
 
     observer.observe(ref);
     return () => observer.disconnect();
-  }, [ref, triggerOnce, options.threshold, options.root, options.rootMargin]);
+  }, [ref, triggerOnce, threshold, root, rootMargin]);
 
   return { ref: setRef, isVisible };
 }

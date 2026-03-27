@@ -8,7 +8,7 @@ type BookingBarComponent = BookingBarModule['default'];
 
 function BookingBarLazy({ onSearch }: { onSearch: (data: { checkIn: string; checkOut: string; guests: number }) => void }) {
   const [BookingBar, setBookingBar] = useState<BookingBarComponent | null>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
+  const [shouldLoad, setShouldLoad] = useState(true);
 
   useEffect(() => {
     if (!shouldLoad) return;
@@ -22,10 +22,9 @@ function BookingBarLazy({ onSearch }: { onSearch: (data: { checkIn: string; chec
     };
 
     if (typeof w.requestIdleCallback === 'function') {
-      // Avoid impacting initial Lighthouse run; load strictly when user asked.
-      w.requestIdleCallback(load);
+      w.requestIdleCallback(load, { timeout: 1500 });
     } else {
-      const t = window.setTimeout(load, 0);
+      const t = window.setTimeout(load, 1200);
       return () => window.clearTimeout(t);
     }
 
@@ -35,16 +34,7 @@ function BookingBarLazy({ onSearch }: { onSearch: (data: { checkIn: string; chec
   }, [shouldLoad]);
 
   if (!BookingBar) {
-    return (
-      <button
-        type="button"
-        onClick={() => setShouldLoad(true)}
-        className="w-full sm:w-auto min-h-[48px] px-6 py-3 rounded-sm bg-white/10 text-white/95 border border-white/30 backdrop-blur
-                   hover:bg-white/15 focus:outline-none focus:ring-2 focus:ring-white/60 focus:ring-offset-2 focus:ring-offset-neutral-900/20"
-      >
-        Перевірити доступність
-      </button>
-    );
+    return <div className="h-[72px] w-full max-w-5xl mx-auto rounded-sm bg-white/10 animate-pulse" aria-hidden="true" />;
   }
 
   return <BookingBar onSearch={onSearch} />;

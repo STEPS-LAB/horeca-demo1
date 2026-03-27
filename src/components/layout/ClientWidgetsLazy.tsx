@@ -10,16 +10,32 @@ export default function ClientWidgetsLazy() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    if (mounted) return;
     const w = window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number };
+    const onFirstInteraction = () => setMounted(true);
+
+    window.addEventListener('pointerdown', onFirstInteraction, { once: true, passive: true });
+    window.addEventListener('keydown', onFirstInteraction, { once: true, passive: true });
+    window.addEventListener('touchstart', onFirstInteraction, { once: true, passive: true });
 
     if (typeof w.requestIdleCallback === 'function') {
-      w.requestIdleCallback(() => setMounted(true), { timeout: 1500 });
-      return;
+      w.requestIdleCallback(() => setMounted(true), { timeout: 10000 });
+    } else {
+      const t = window.setTimeout(() => setMounted(true), 9000);
+      return () => {
+        window.clearTimeout(t);
+        window.removeEventListener('pointerdown', onFirstInteraction);
+        window.removeEventListener('keydown', onFirstInteraction);
+        window.removeEventListener('touchstart', onFirstInteraction);
+      };
     }
 
-    const t = window.setTimeout(() => setMounted(true), 1200);
-    return () => window.clearTimeout(t);
-  }, []);
+    return () => {
+      window.removeEventListener('pointerdown', onFirstInteraction);
+      window.removeEventListener('keydown', onFirstInteraction);
+      window.removeEventListener('touchstart', onFirstInteraction);
+    };
+  }, [mounted]);
 
   if (!mounted) return null;
 

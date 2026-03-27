@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
-import { Inter, Montserrat } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import dynamic from 'next/dynamic';
 import Header from '@/components/layout/Header';
 import MainWrapper from '@/components/layout/MainWrapper';
@@ -20,15 +20,6 @@ const inter = Inter({
   fallback: ['system-ui', 'sans-serif'],
 });
 
-const montserrat = Montserrat({
-  subsets: ['latin', 'cyrillic'],
-  weight: ['500'],
-  display: 'swap',
-  variable: '--font-montserrat',
-  preload: true,
-  fallback: ['system-ui', 'sans-serif'],
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://horeca-demo.vercel.app'),
   title: {
@@ -41,7 +32,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="uk" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
+    <html lang="uk" suppressHydrationWarning className={inter.variable}>
       <body className="antialiased font-sans">
         <LanguageProvider>
           <HeaderProvider>

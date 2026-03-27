@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import HeroContent from './HeroContent';
-import heroImage from '../../../public/images/hero.webp';
 
 interface HeroProps {
   title?: string;
@@ -15,13 +14,13 @@ export default function Hero({
     <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
-          src={heroImage}
+          src="/images/hero.webp"
           alt={subtitle || 'Розкішний відпочинок на природі'}
           fill
           priority
           fetchPriority="high"
           loading="eager"
-          placeholder="blur"
+          unoptimized
           className="object-cover bg-center bg-no-repeat"
           sizes="100vw"
           quality={75}

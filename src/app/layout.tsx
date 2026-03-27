@@ -6,10 +6,10 @@ import Header from '@/components/layout/Header';
 import MainWrapper from '@/components/layout/MainWrapper';
 import { LanguageProvider } from '@/lib/i18n/LanguageProvider';
 import { HeaderProvider } from '@/components/layout/HeaderContext';
+import ClientWidgetsLazy from '@/components/layout/ClientWidgetsLazy';
 import '@/styles/globals.css';
 
 const Footer = dynamic(() => import('@/components/layout/Footer'));
-const ClientWidgets = dynamic(() => import('@/components/layout/ClientWidgets'));
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -42,6 +42,15 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="uk" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
+      <head>
+        <link
+          rel="preload"
+          href="/images/hero.webp"
+          as="image"
+          type="image/webp"
+          fetchPriority="high"
+        />
+      </head>
       <body className="antialiased font-sans">
         <LanguageProvider>
           <HeaderProvider>
@@ -49,7 +58,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Header />
               <MainWrapper>{children}</MainWrapper>
               <Footer />
-              <ClientWidgets />
+              <ClientWidgetsLazy />
             </div>
           </HeaderProvider>
         </LanguageProvider>

@@ -25,7 +25,7 @@ const montserrat = Montserrat({
   weight: ['500'],
   display: 'swap',
   variable: '--font-montserrat',
-  preload: true,
+  preload: false,
   fallback: ['system-ui', 'sans-serif'],
 });
 
@@ -42,15 +42,6 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="uk" suppressHydrationWarning className={`${inter.variable} ${montserrat.variable}`}>
-      <head>
-        <link
-          rel="preload"
-          href="/images/hero.webp"
-          as="image"
-          type="image/webp"
-          fetchPriority="high"
-        />
-      </head>
       <body className="antialiased font-sans">
         <LanguageProvider>
           <HeaderProvider>

@@ -17,7 +17,7 @@ const content = {
   ua: {
     subtitle: 'Про нас',
     title: 'Місце, де природа зустрічається з розкішшю',
-    description: 'Готель — це унікальний курортний комплекс, розташований Ми створили місце, де кожен гість може відпочити від міського шуму та насолодитися гармонією з природою, не відмовляючись від комфорту та розкоші.',
+    description: 'Ми створили простір, де тиша гір, свіже повітря та бездоганний сервіс поєднуються в єдине ціле. Тут кожен гість зможе по-справжньому перезавантажитись — насолодитися природою, не жертвуючи комфортом і затишком.',
     features: {
       nature: { title: 'Природа', description: 'Оточений віковими лісами та кристально чистими озерами' },
       luxury: { title: 'Розкіш', description: 'Преміальний сервіс та увага до кожної деталі' },
@@ -28,7 +28,7 @@ const content = {
   en: {
     subtitle: 'About Us',
     title: 'Where Nature Meets Luxury',
-    description: 'Hotel is a unique resort complex located We have created a place where every guest can escape from the city noise and enjoy harmony with nature without compromising on comfort and luxury.',
+    description: 'We have created a space where mountain silence, fresh air and impeccable service come together as one. Here every guest can truly recharge — enjoying nature without sacrificing comfort and cosiness.',
     features: {
       nature: { title: 'Nature', description: 'Surrounded by ancient forests and crystal-clear lakes' },
       luxury: { title: 'Luxury', description: 'Premium service and attention to every detail' },

@@ -18,6 +18,8 @@ const NAV_ITEMS = [
   { href: '/contacts', key: 'contacts' },
 ] as const;
 
+const MENU_ANIM_MS = 300;
+
 interface HeaderProps {
   variant?: 'light' | 'dark';
 }
@@ -27,31 +29,33 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
   const t = useTranslations();
   const { variant: contextVariant } = useHeader();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [menuMounted, setMenuMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const isClosingRef = useRef(false);
   const headerRef = useRef<HTMLElement>(null);
 
   const handleCloseMenu = useCallback(() => {
-    if (isClosingRef.current) return;
+    if (isClosingRef.current || !menuOpen) return;
     isClosingRef.current = true;
     setMenuOpen(false);
     setTimeout(() => {
+      setMenuMounted(false);
       isClosingRef.current = false;
-    }, 400);
-  }, []);
+    }, MENU_ANIM_MS);
+  }, [menuOpen]);
 
   const handleOpenMenu = useCallback(() => {
     if (isClosingRef.current) return;
-    setMenuOpen(true);
+    setMenuMounted(true);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => setMenuOpen(true));
+    });
   }, []);
 
   const scrollToTop = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth',
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   useEffect(() => {
@@ -61,24 +65,21 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Use page variant if provided, otherwise use context variant
   const effectiveVariant = pageVariant || contextVariant;
-  
-  // Force dark variant when specified (for pages without hero)
   const forceDark = effectiveVariant === 'dark';
   const useDarkHeader = forceDark || isScrolled;
 
   useEffect(() => {
-    if (!menuOpen) return;
+    if (!menuMounted) return;
     const handleEsc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setMenuOpen(false);
+      if (e.key === 'Escape') handleCloseMenu();
     };
     document.addEventListener('keydown', handleEsc);
     return () => document.removeEventListener('keydown', handleEsc);
-  }, [menuOpen]);
+  }, [menuMounted, handleCloseMenu]);
 
   useEffect(() => {
-    if (menuOpen) {
+    if (menuMounted) {
       document.body.style.overflow = 'hidden';
       document.body.style.touchAction = 'none';
     } else {
@@ -89,7 +90,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
       document.body.style.overflow = '';
       document.body.style.touchAction = '';
     };
-  }, [menuOpen]);
+  }, [menuMounted]);
 
   return (
     <>
@@ -102,7 +103,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
         }`}
       >
         <div className="container flex items-center justify-between h-[4.5rem] min-h-[4.5rem]">
-          {/* Logo */}
           <Link
             href="/"
             className={`font-display text-xl sm:text-2xl uppercase tracking-[0.32em] transition-colors ${
@@ -112,7 +112,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
             HOTEL
           </Link>
 
-          {/* Desktop Navigation */}
           <nav className="hidden items-center gap-8 md:flex" aria-label="Main">
             {NAV_ITEMS.map(({ key, href }) => (
               <Link
@@ -128,9 +127,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
             ))}
           </nav>
 
-          {/* Actions */}
           <div className="flex items-center gap-2">
-            {/* Language Switch */}
             <div className={`hidden md:flex h-9 items-center gap-1 rounded-sm p-0.5 ${
               useDarkHeader ? 'bg-neutral-200' : 'bg-white/10 backdrop-blur border border-white/30'
             }`}>
@@ -150,7 +147,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               ))}
             </div>
 
-            {/* Book Button */}
             <button
               onClick={() => setBookingModalOpen(true)}
               className="hidden items-center justify-center rounded-sm bg-primary px-4 py-2.5 text-xs font-medium uppercase tracking-[0.14em] text-white shadow-md transition-all duration-300 hover:scale-[1.02] hover:bg-primary-900 md:inline-flex cursor-pointer"
@@ -158,100 +154,68 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               {t('common.bookNow')}
             </button>
 
-            {/* Burger Menu (Mobile) */}
             <button
               type="button"
               onClick={handleOpenMenu}
               className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 rounded md:hidden"
               aria-label="Toggle menu"
-              aria-expanded={menuOpen}
+              aria-expanded={menuMounted}
             >
-              <span
-                className={`h-[1.5px] w-5 rounded-full transition-colors ${
-                  useDarkHeader ? 'bg-[var(--color-neutral-900)]' : 'bg-white'
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-5 rounded-full transition-colors ${
-                  useDarkHeader ? 'bg-[var(--color-neutral-900)]' : 'bg-white'
-                }`}
-              />
-              <span
-                className={`h-[1.5px] w-5 rounded-full transition-colors ${
-                  useDarkHeader ? 'bg-[var(--color-neutral-900)]' : 'bg-white'
-                }`}
-              />
+              {[0, 1, 2].map((i) => (
+                <span
+                  key={i}
+                  className={`h-[1.5px] w-5 rounded-full transition-colors ${
+                    useDarkHeader ? 'bg-[var(--color-neutral-900)]' : 'bg-white'
+                  }`}
+                />
+              ))}
             </button>
           </div>
         </div>
       </header>
 
-      {/* Mobile Menu Drawer */}
-      {menuOpen && (
+      {menuMounted && (
         <>
-          {/* Backdrop - instant fade without motion for mobile performance */}
+          {/* Backdrop */}
           <div
-            className="fixed inset-0 z-[60] bg-black/40 backdrop-blur-md md:hidden"
+            className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-md md:hidden transition-opacity duration-300 ${
+              menuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
             aria-hidden="true"
             onTouchEnd={handleCloseMenu}
-            onClick={(e) => {
-              e.preventDefault();
-              handleCloseMenu();
-            }}
+            onClick={(e) => { e.preventDefault(); handleCloseMenu(); }}
           />
 
-          {/* Close Button - static without motion animation */}
+          {/* Close Button */}
           <button
             key="close-btn"
             type="button"
-            onTouchStart={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleCloseMenu();
-              return false;
-            }}
-            onMouseDown={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleCloseMenu();
-              return false;
-            }}
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              return false;
-            }}
-            className="fixed right-6 top-6 z-[62] flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-neutral-900)] shadow-lg outline-none md:hidden ios-no-flicker"
+            onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); handleCloseMenu(); }}
+            onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleCloseMenu(); }}
+            onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+            className={`fixed right-6 top-6 z-[62] flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-neutral-900)] shadow-lg outline-none md:hidden ios-no-flicker transition-opacity duration-300 ${
+              menuOpen ? 'opacity-100' : 'opacity-0'
+            }`}
             aria-label="Close menu"
             style={{
               WebkitTapHighlightColor: 'transparent',
               WebkitUserSelect: 'none',
               userSelect: 'none',
-              WebkitAppearance: 'none',
-              WebkitTransform: 'translate3d(0, 0, 0)',
-              transform: 'translate3d(0, 0, 0)',
-              WebkitBackfaceVisibility: 'hidden',
-              backfaceVisibility: 'hidden',
-              cursor: 'default',
               touchAction: 'none',
-              pointerEvents: 'auto',
+              pointerEvents: menuOpen ? 'auto' : 'none',
             }}
           >
             <span className="relative flex h-5 w-5 shrink-0 items-center justify-center" aria-hidden>
-              <span
-                className="absolute h-[1.5px] w-5 rounded-full bg-[var(--color-neutral-900)]"
-                style={{ transform: 'rotate(45deg)' }}
-              />
-              <span
-                className="absolute h-[1.5px] w-5 rounded-full bg-[var(--color-neutral-900)]"
-                style={{ transform: 'rotate(-45deg)' }}
-              />
+              <span className="absolute h-[1.5px] w-5 rounded-full bg-[var(--color-neutral-900)]" style={{ transform: 'rotate(45deg)' }} />
+              <span className="absolute h-[1.5px] w-5 rounded-full bg-[var(--color-neutral-900)]" style={{ transform: 'rotate(-45deg)' }} />
             </span>
           </button>
 
-          {/* Menu Panel - slide animation using CSS instead of Framer Motion */}
+          {/* Menu Panel */}
           <aside
-            className="fixed inset-y-0 right-0 z-[61] w-[min(88vw,320px)] bg-[var(--color-surface)] shadow-2xl md:hidden animate-slide-in"
+            className={`fixed inset-y-0 right-0 z-[61] w-[min(88vw,320px)] bg-[var(--color-surface)] shadow-2xl md:hidden transition-transform duration-300 ease-out ${
+              menuOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
@@ -273,7 +237,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
         </>
       )}
 
-      {/* Booking Modal — only loaded when opened */}
       {bookingModalOpen && <BookingModal isOpen={bookingModalOpen} onClose={() => setBookingModalOpen(false)} />}
     </>
   );

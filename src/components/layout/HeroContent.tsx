@@ -1,44 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
-
-type BookingBarModule = typeof import('@/features/booking/BookingBar');
-type BookingBarComponent = BookingBarModule['default'];
-
-function BookingBarLazy({ onSearch }: { onSearch: (data: { checkIn: string; checkOut: string; guests: number }) => void }) {
-  const [BookingBar, setBookingBar] = useState<BookingBarComponent | null>(null);
-  const [shouldLoad, setShouldLoad] = useState(true);
-
-  useEffect(() => {
-    if (!shouldLoad) return;
-    let cancelled = false;
-    const w = window as unknown as { requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number };
-
-    const load = () => {
-      import('@/features/booking/BookingBar').then((mod) => {
-        if (!cancelled) setBookingBar(() => mod.default);
-      });
-    };
-
-    if (typeof w.requestIdleCallback === 'function') {
-      w.requestIdleCallback(load, { timeout: 1500 });
-    } else {
-      const t = window.setTimeout(load, 1200);
-      return () => window.clearTimeout(t);
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [shouldLoad]);
-
-  if (!BookingBar) {
-    return <div className="h-[72px] w-full max-w-5xl mx-auto rounded-sm bg-white/10 animate-pulse" aria-hidden="true" />;
-  }
-
-  return <BookingBar onSearch={onSearch} />;
-}
+import BookingBar from '@/features/booking/BookingBar';
 
 interface HeroContentProps {
   title?: string;
@@ -60,8 +23,8 @@ export default function HeroContent({ title, subtitle }: HeroContentProps) {
         {subtitle || (locale === 'ua' ? 'Розкішний відпочинок на природі' : 'Luxury Escape in Nature')}
       </p>
 
-      <div className="md:animate-fade-in md:[animation-delay:240ms]">
-        <BookingBarLazy onSearch={handleSearch} />
+      <div>
+        <BookingBar onSearch={handleSearch} />
       </div>
     </div>
   );

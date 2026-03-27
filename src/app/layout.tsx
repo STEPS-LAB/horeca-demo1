@@ -27,6 +27,11 @@ export const metadata: Metadata = {
     template: '%s | Готель',
   },
   description: 'Відкрийте для себе ідеальне поєднання розкоші та природи',
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   robots: { index: true, follow: true },
 };
 

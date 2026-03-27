@@ -149,7 +149,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
 
             {/* Mobile language switcher */}
             <div
-              className={`flex md:hidden h-12 items-center gap-1 rounded-sm p-1 ${
+              className={`flex md:hidden h-9 items-center gap-1 rounded-sm p-0.5 ${
                 useDarkHeader ? 'bg-neutral-200' : 'bg-white/10 backdrop-blur border border-white/30'
               }`}
               aria-label="Language switcher"
@@ -157,7 +157,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               {(['ua', 'en'] as const).map((code) => (
                 <button
                   key={code}
-                  className={`flex h-12 min-w-[3rem] items-center justify-center rounded-sm px-3 text-[11px] uppercase tracking-[0.14em] transition ${
+                  className={`flex h-8 min-w-[2.5rem] items-center justify-center rounded-sm px-2 text-[11px] uppercase tracking-[0.14em] transition ${
                     locale === code
                       ? 'bg-primary text-white'
                       : useDarkHeader ? 'text-neutral-600 hover:bg-neutral-300' : 'text-white/90 hover:bg-white/20'
@@ -243,26 +243,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
             aria-modal="true"
             aria-label="Menu"
           >
-            {/* Mobile language switcher (inside menu) */}
-            <div className="px-8 pt-8 md:hidden">
-              <div className="flex w-full max-w-[240px] items-center gap-1 rounded-sm bg-white p-1 shadow-sm">
-                {(['ua', 'en'] as const).map((code) => (
-                  <button
-                    key={code}
-                    className={`flex h-9 flex-1 items-center justify-center rounded-sm px-3 text-xs uppercase tracking-[0.14em] transition ${
-                      locale === code
-                        ? 'bg-primary text-white'
-                        : 'text-neutral-600 hover:bg-neutral-100'
-                    }`}
-                    onClick={() => setLocale(code)}
-                    type="button"
-                  >
-                    {code}
-                  </button>
-                ))}
-              </div>
-            </div>
-
             <nav className="flex flex-col gap-4 pt-24 pb-8 pl-8 pr-6" aria-label="Mobile">
               {NAV_ITEMS.map(({ key, href }) => (
                 <a

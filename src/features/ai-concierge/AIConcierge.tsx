@@ -72,7 +72,7 @@ export default function AIConcierge() {
         timestamp: new Date(),
       }]);
     }
-  }, [locale, messages.length]);
+  }, [locale]);
 
   const getResponse = (userMessage: string): string => {
     const lowerMessage = userMessage.toLowerCase();

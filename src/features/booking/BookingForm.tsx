@@ -27,6 +27,7 @@ const recommendedStays = [
 export default function BookingForm() {
   const t = useTranslations('booking');
   const [currentStep, setCurrentStep] = useState<BookingStep>('dates');
+  const [isSearching, setIsSearching] = useState(false);
   const [bookingData, setBookingData] = useState<BookingData>({
     checkIn: null,
     checkOut: null,
@@ -57,6 +58,15 @@ export default function BookingForm() {
       return stepOrder[Math.max(currentIndex - 1, 0)];
     });
   }, []);
+
+  const handleSearch = useCallback(() => {
+    setIsSearching(true);
+    // Simulate search
+    setTimeout(() => {
+      setIsSearching(false);
+      handleNext();
+    }, 2000);
+  }, [handleNext]);
 
   const getStepTitle = (step: BookingStep) => {
     switch (step) {
@@ -158,7 +168,7 @@ export default function BookingForm() {
         </AnimatePresence>
 
         {/* Recommended Stays */}
-        {currentStep === 'dates' && (
+        {currentStep === 'dates' && !isSearching && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -194,6 +204,26 @@ export default function BookingForm() {
         )}
       </div>
 
+      {/* Searching Overlay */}
+      <AnimatePresence>
+        {isSearching && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="absolute inset-0 bg-surface/95 backdrop-blur-sm z-10 flex items-center justify-center"
+          >
+            <div className="text-center">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
+                className="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full mx-auto mb-4"
+              />
+              <p className="text-neutral-700 font-medium">{t('searching')}</p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

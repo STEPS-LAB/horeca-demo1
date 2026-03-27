@@ -1,9 +1,13 @@
 'use client';
 
-import { useRef } from 'react';
 import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
-import BookingBar from '@/features/booking/BookingBar';
+
+const BookingBar = dynamic(() => import('@/features/booking/BookingBar'), {
+  ssr: false,
+  loading: () => <div className="h-[72px] rounded-sm bg-white/10 animate-pulse" />,
+});
 
 interface HeroProps {
   title?: string;
@@ -17,18 +21,11 @@ export default function Hero({
   backgroundImage = '/images/hero.webp',
 }: HeroProps) {
   const { locale } = useLanguage();
-  const containerRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = (_data: { checkIn: string; checkOut: string; guests: number }) => {
-    // Redirect to rooms or handle search
-  };
+  const handleSearch = (_data: { checkIn: string; checkOut: string; guests: number }) => {};
 
   return (
-    <section
-      ref={containerRef}
-      className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden"
-    >
-      {/* Background Image with priority for LCP optimization */}
+    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 z-0">
         <Image
           src={backgroundImage}
@@ -39,13 +36,11 @@ export default function Hero({
           loading="eager"
           className="object-cover bg-center bg-no-repeat"
           sizes="100vw"
-          quality={60}
+          quality={75}
         />
-        {/* Overlay Gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/40 to-neutral-900/60" />
       </div>
 
-      {/* Content */}
       <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
         <div className="animate-fade-in">
           <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-white mb-6 tracking-tight">
@@ -53,14 +48,13 @@ export default function Hero({
           </h1>
         </div>
 
-        <div className="animate-fade-in [animation-delay:120ms] [animation-fill-mode:both]">
+        <div className="animate-fade-in [animation-delay:100ms]">
           <p className="text-lg sm:text-xl md:text-2xl text-neutral-200 mb-10 max-w-2xl mx-auto font-light">
             {subtitle || (locale === 'ua' ? 'Розкішний відпочинок на природі' : 'Luxury Escape in Nature')}
           </p>
         </div>
 
-        {/* Booking Bar */}
-        <div className="animate-fade-in [animation-delay:240ms] [animation-fill-mode:both]">
+        <div className="animate-fade-in [animation-delay:200ms]">
           <BookingBar onSearch={handleSearch} />
         </div>
       </div>

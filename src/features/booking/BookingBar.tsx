@@ -55,6 +55,10 @@ export default function BookingBar({ onSearch }: BookingBarProps) {
     ? `${format(new Date(checkIn), 'dd.MM.yyyy')} — ${format(new Date(checkOut), 'dd.MM.yyyy')}`
     : `${format(new Date(checkIn), 'dd.MM.yyyy')} — ${format(new Date(checkOut), 'dd.MM.yyyy')}`;
 
+  const datesDisplayShort = isUA
+    ? `${format(new Date(checkIn), 'dd.MM.yy')} — ${format(new Date(checkOut), 'dd.MM.yy')}`
+    : `${format(new Date(checkIn), 'MM/dd/yy')} — ${format(new Date(checkOut), 'MM/dd/yy')}`;
+
   const copy = {
     searchDates: isUA ? 'Дати' : 'Dates',
     searchGuests: isUA ? 'Гості' : 'Guests',

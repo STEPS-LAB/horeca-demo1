@@ -20,6 +20,14 @@ const nextConfig = {
   experimental: {
     optimizePackageImports: ['lucide-react', 'framer-motion', 'date-fns', 'react-icons', 'clsx'],
   },
+  webpack(config, { dev }) {
+    // Work around occasional Next 15 dev cache corruption that triggers
+    // "__webpack_modules__[moduleId] is not a function" and manifest errors.
+    if (dev) {
+      config.cache = false;
+    }
+    return config;
+  },
   poweredByHeader: false,
   compress: true,
   async headers() {

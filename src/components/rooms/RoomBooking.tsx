@@ -10,6 +10,8 @@ interface RoomBookingProps {
 }
 
 export default function RoomBooking({ room }: RoomBookingProps) {
+  const formattedPrice = new Intl.NumberFormat('uk-UA').format(room.price);
+
   return (
     <section className="section-padding bg-neutral-50">
       <div className="container-wide mx-auto">
@@ -42,7 +44,7 @@ export default function RoomBooking({ room }: RoomBookingProps) {
                 <div className="flex justify-between items-center">
                   <span className="text-neutral-600">за ніч</span>
                   <span className="text-2xl font-medium text-primary-700">
-                    {room.price.toLocaleString()} ₴
+                    {formattedPrice} ₴
                   </span>
                 </div>
                 <div className="pt-4 border-t border-neutral-100">

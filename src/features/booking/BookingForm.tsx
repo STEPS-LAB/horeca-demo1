@@ -412,6 +412,7 @@ function RoomStep({
   onBack: () => void;
 }) {
   const t = useTranslations('rooms');
+  const formatPrice = (value: number) => new Intl.NumberFormat('uk-UA').format(value);
   
   const suggestedRooms = [
     { id: 'lake-house', name: 'Озерний Будинок', price: 8500, image: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=80' },
@@ -450,7 +451,7 @@ function RoomStep({
             <div className="flex-1">
               <h4 className="font-medium text-neutral-900">{room.name}</h4>
               <p className="text-sm text-neutral-500">
-                {t('from')} {room.price.toLocaleString()} ₴ / {t('perNight')}
+                {t('from')} {formatPrice(room.price)} ₴ / {t('perNight')}
               </p>
             </div>
             {bookingData.selectedRoom === room.id && (

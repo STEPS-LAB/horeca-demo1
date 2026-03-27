@@ -10,6 +10,7 @@ import Image from 'next/image';
 export default function RoomsSection() {
   const { ref, isVisible } = useIntersectionObserver<HTMLDivElement>({ threshold: 0.1 });
   const { locale } = useLanguage();
+  const numberLocale = locale === 'en' ? 'en-US' : 'uk-UA';
 
   const content = {
     ua: {
@@ -92,7 +93,7 @@ export default function RoomsSection() {
                       <div>
                         <span className="text-xs text-neutral-600">від</span>
                         <div className="text-lg font-medium text-primary-700">
-                          {room.price.toLocaleString()} ₴
+                          {new Intl.NumberFormat(numberLocale).format(room.price)} ₴
                         </div>
                         <span className="text-xs text-neutral-600">за ніч</span>
                       </div>

@@ -11,6 +11,7 @@ interface RelatedRoomsProps {
 
 export default function RelatedRooms({ rooms }: RelatedRoomsProps) {
   if (rooms.length === 0) return null;
+  const formatPrice = (value: number) => new Intl.NumberFormat('uk-UA').format(value);
 
   return (
     <section className="section-padding bg-surface">
@@ -75,7 +76,7 @@ export default function RelatedRooms({ rooms }: RelatedRoomsProps) {
                       <div>
                         <span className="text-xs text-neutral-500">від</span>
                         <div className="text-lg font-medium text-primary-700">
-                          {room.price.toLocaleString()} ₴
+                          {formatPrice(room.price)} ₴
                         </div>
                         <span className="text-xs text-neutral-500">за ніч</span>
                       </div>

@@ -96,10 +96,10 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
     <>
       <header
         ref={headerRef}
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 h-[4.5rem] min-h-[4.5rem] ${
+        className={`fixed inset-x-0 top-0 z-50 md:transition-all md:duration-500 h-[4.5rem] min-h-[4.5rem] ${
           useDarkHeader
             ? 'bg-white/90 backdrop-blur-md shadow-sm'
-            : 'bg-transparent'
+            : 'bg-transparent backdrop-blur-md'
         }`}
       >
         <div className="container flex items-center justify-between h-[4.5rem] min-h-[4.5rem]">
@@ -147,6 +147,29 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               ))}
             </div>
 
+            {/* Mobile language switcher */}
+            <div
+              className={`flex md:hidden h-9 items-center gap-1 rounded-sm p-0.5 ${
+                useDarkHeader ? 'bg-neutral-200' : 'bg-white/10 backdrop-blur border border-white/30'
+              }`}
+              aria-label="Language switcher"
+            >
+              {(['ua', 'en'] as const).map((code) => (
+                <button
+                  key={code}
+                  className={`flex h-8 min-w-[2.5rem] items-center justify-center rounded-sm px-2 text-[11px] uppercase tracking-[0.14em] transition ${
+                    locale === code
+                      ? 'bg-primary text-white'
+                      : useDarkHeader ? 'text-neutral-600 hover:bg-neutral-300' : 'text-white/90 hover:bg-white/20'
+                  }`}
+                  onClick={() => setLocale(code)}
+                  type="button"
+                >
+                  {code}
+                </button>
+              ))}
+            </div>
+
             <button
               onClick={() => setBookingModalOpen(true)}
               className="hidden items-center justify-center rounded-sm bg-primary px-4 py-2.5 text-xs font-medium uppercase tracking-[0.14em] text-white shadow-md transition-all duration-300 hover:scale-[1.02] hover:bg-primary-900 md:inline-flex cursor-pointer"
@@ -164,7 +187,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               {[0, 1, 2].map((i) => (
                 <span
                   key={i}
-                  className={`h-[1.5px] w-5 rounded-full transition-colors ${
+                  className={`h-[1.5px] w-5 rounded-full md:transition-colors ${
                     useDarkHeader ? 'bg-[var(--color-neutral-900)]' : 'bg-white'
                   }`}
                 />
@@ -178,7 +201,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-md md:hidden transition-opacity duration-300 ${
+            className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-md md:hidden ${
               menuOpen ? 'opacity-100' : 'opacity-0'
             }`}
             aria-hidden="true"
@@ -193,7 +216,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
             onTouchStart={(e) => { e.preventDefault(); e.stopPropagation(); handleCloseMenu(); }}
             onMouseDown={(e) => { e.preventDefault(); e.stopPropagation(); handleCloseMenu(); }}
             onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-            className={`fixed right-6 top-6 z-[62] flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-neutral-900)] shadow-lg outline-none md:hidden ios-no-flicker transition-opacity duration-300 ${
+            className={`fixed right-6 top-6 z-[62] flex h-10 w-10 items-center justify-center rounded-full bg-white text-[var(--color-neutral-900)] shadow-lg outline-none md:hidden ios-no-flicker ${
               menuOpen ? 'opacity-100' : 'opacity-0'
             }`}
             aria-label="Close menu"
@@ -213,13 +236,33 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
 
           {/* Menu Panel */}
           <aside
-            className={`fixed inset-y-0 right-0 z-[61] w-[min(88vw,320px)] bg-[var(--color-surface)] shadow-2xl md:hidden transition-transform duration-300 ease-out ${
+            className={`fixed inset-y-0 right-0 z-[61] w-[min(88vw,320px)] bg-[var(--color-surface)] shadow-2xl md:hidden ${
               menuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
           >
+            {/* Mobile language switcher (inside menu) */}
+            <div className="px-8 pt-8 md:hidden">
+              <div className="flex w-full max-w-[240px] items-center gap-1 rounded-sm bg-white p-1 shadow-sm">
+                {(['ua', 'en'] as const).map((code) => (
+                  <button
+                    key={code}
+                    className={`flex h-9 flex-1 items-center justify-center rounded-sm px-3 text-xs uppercase tracking-[0.14em] transition ${
+                      locale === code
+                        ? 'bg-primary text-white'
+                        : 'text-neutral-600 hover:bg-neutral-100'
+                    }`}
+                    onClick={() => setLocale(code)}
+                    type="button"
+                  >
+                    {code}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <nav className="flex flex-col gap-4 pt-24 pb-8 pl-8 pr-6" aria-label="Mobile">
               {NAV_ITEMS.map(({ key, href }) => (
                 <a

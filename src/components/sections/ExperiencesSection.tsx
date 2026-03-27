@@ -54,7 +54,7 @@ export default function ExperiencesSection() {
                 src={activity.image}
                 alt={activity.name}
                 fill
-                className="object-cover transition-transform duration-700 md:group-hover:scale-110"
+                className="object-cover transition-transform duration-700 group-hover:scale-110 group-active:scale-105"
                 sizes="(max-width: 768px) 50vw, 33vw"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/80 via-neutral-900/20 to-transparent" />

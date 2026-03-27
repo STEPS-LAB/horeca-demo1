@@ -50,15 +50,17 @@ export default function HeroContent({ title, subtitle }: HeroContentProps) {
 
   return (
     <div className="relative z-10 text-center px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-      <h1 className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-white mb-6 tracking-tight">
+      <h1 className="md:animate-fade-in font-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-medium text-white mb-6 tracking-tight">
         {title || (locale === 'ua' ? 'Готель' : 'Hotel')}
       </h1>
 
-      <p className="text-lg sm:text-xl md:text-2xl text-neutral-200 mb-10 max-w-2xl mx-auto font-light">
+      <p className="md:animate-fade-in md:[animation-delay:120ms] text-lg sm:text-xl md:text-2xl text-neutral-200 mb-10 max-w-2xl mx-auto font-light">
         {subtitle || (locale === 'ua' ? 'Розкішний відпочинок на природі' : 'Luxury Escape in Nature')}
       </p>
 
-      <BookingBarLazy onSearch={handleSearch} />
+      <div className="md:animate-fade-in md:[animation-delay:240ms]">
+        <BookingBarLazy onSearch={handleSearch} />
+      </div>
     </div>
   );
 }

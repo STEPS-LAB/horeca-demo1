@@ -14,12 +14,7 @@ const TestimonialsSection = dynamic(() => import('@/components/sections/Testimon
 
 export default function HomeSections() {
   return (
-    <div
-      style={{
-        contentVisibility: 'auto',
-        containIntrinsicSize: '1px 3600px',
-      }}
-    >
+    <>
       <AboutSection />
 
       <div id="rooms">
@@ -35,7 +30,7 @@ export default function HomeSections() {
 
       <ResortMap />
       <TestimonialsSection />
-    </div>
+    </>
   );
 }
 

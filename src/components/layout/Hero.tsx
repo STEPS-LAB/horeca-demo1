@@ -23,7 +23,7 @@ export default function Hero({
           loading="eager"
           className="object-cover bg-center bg-no-repeat"
           sizes="100vw"
-          quality={45}
+          quality={65}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/45 to-neutral-900/70" />
       </div>

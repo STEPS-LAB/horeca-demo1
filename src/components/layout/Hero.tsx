@@ -12,7 +12,7 @@ export default function Hero({
   subtitle,
 }: HeroProps) {
   return (
-    <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
+    <section className="relative h-[90vh] min-h-[640px] flex items-center justify-center overflow-hidden bg-neutral-900">
       <div className="absolute inset-0 z-0">
         <Image
           src={heroImage}
@@ -21,12 +21,11 @@ export default function Hero({
           priority
           fetchPriority="high"
           loading="eager"
-          placeholder="blur"
           className="object-cover bg-center bg-no-repeat"
           sizes="100vw"
-          quality={60}
+          quality={55}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/60 via-neutral-900/40 to-neutral-900/60" />
+        <div className="absolute inset-0 bg-gradient-to-b from-neutral-900/70 via-neutral-900/45 to-neutral-900/70" />
       </div>
 
       <HeroContent title={title} subtitle={subtitle} />

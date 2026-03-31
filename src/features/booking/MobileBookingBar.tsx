@@ -39,7 +39,7 @@ export default function MobileBookingBar() {
         </button>
       </div>
 
-      {bookingModalOpen && <BookingModal isOpen={bookingModalOpen} onClose={() => setBookingModalOpen(false)} />}
+      <BookingModal isOpen={bookingModalOpen} onClose={() => setBookingModalOpen(false)} />
     </>
   );
 }

@@ -2,12 +2,21 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Users, Minus, Plus } from 'lucide-react';
+import { X, Users, Minus, Plus, Calendar, Loader2 } from 'lucide-react';
 
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+type SearchStatus = 'idle' | 'loading' | 'success';
+
+const formatDateDisplay = (date: Date) =>
+  date.toLocaleDateString('uk-UA', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
 
 export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
   const [checkIn, setCheckIn] = useState<Date>(() => {
@@ -23,8 +32,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     return checkout;
   });
   const [guests, setGuests] = useState(1);
-  const checkInInputRef = useRef<HTMLInputElement>(null);
-  const checkOutInputRef = useRef<HTMLInputElement>(null);
+  const [searchStatus, setSearchStatus] = useState<SearchStatus>('idle');
+  const timersRef = useRef<number[]>([]);
 
   // Block scroll when modal is open
   useEffect(() => {
@@ -47,12 +56,43 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
     return () => document.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchStatus('idle');
+    }
+    return () => {
+      timersRef.current.forEach((timerId) => window.clearTimeout(timerId));
+      timersRef.current = [];
+    };
+  }, [isOpen]);
+
   const today = new Date();
   const tomorrow = new Date(today);
   tomorrow.setDate(tomorrow.getDate() + 1);
 
   const minCheckOut = new Date(checkIn);
   minCheckOut.setDate(minCheckOut.getDate() + 1);
+
+  const checkInDisplay = formatDateDisplay(checkIn);
+  const checkOutDisplay = formatDateDisplay(checkOut);
+
+  const handleSearch = () => {
+    if (searchStatus !== 'idle') return;
+    setSearchStatus('loading');
+
+    const loadingTimer = window.setTimeout(() => {
+      setSearchStatus('success');
+
+      const closeTimer = window.setTimeout(() => {
+        onClose();
+        setSearchStatus('idle');
+      }, 1200);
+
+      timersRef.current.push(closeTimer);
+    }, 3000);
+
+    timersRef.current.push(loadingTimer);
+  };
 
   return (
     <AnimatePresence>
@@ -63,16 +103,16 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
+            transition={{ duration: 0.25, ease: 'easeInOut' }}
             className="fixed inset-0 z-[100] bg-black/50 backdrop-blur-sm flex items-center justify-center"
             onClick={onClose}
           >
             {/* Modal */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              initial={{ opacity: 0, scale: 0.96, y: 16 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
+              exit={{ opacity: 0, scale: 0.9, y: 28 }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
               className="w-[95%] max-w-[400px] rounded-sm bg-white p-6 shadow-2xl max-h-[90vh] overflow-y-auto"
               role="dialog"
               aria-modal="true"
@@ -100,9 +140,8 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 <label className="block text-sm text-neutral-600 mb-2">
                   Дата заїзду
                 </label>
-                <div className="relative w-full">
+                <div className="relative w-full h-[52px] rounded-sm border border-neutral-200 bg-white">
                   <input
-                    ref={checkInInputRef}
                     type="date"
                     min={tomorrow.toISOString().split('T')[0]}
                     value={checkIn.toISOString().split('T')[0]}
@@ -115,13 +154,15 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                         setCheckOut(newCheckout);
                       }
                     }}
-                    className="luxury-input bg-white h-[52px] w-full"
+                    className="absolute inset-0 z-10 h-full w-full opacity-0 cursor-pointer appearance-none"
                     style={{ colorScheme: 'light' }}
                   />
                   <div 
-                    className="absolute inset-0 cursor-pointer"
-                    onClick={() => checkInInputRef.current?.showPicker()}
-                  />
+                    className="absolute inset-0 flex items-center justify-between px-4 text-neutral-900 text-base pointer-events-none"
+                  >
+                    <span>{checkInDisplay}</span>
+                    <Calendar className="w-4 h-4 text-neutral-500" aria-hidden="true" />
+                  </div>
                 </div>
               </div>
 
@@ -130,20 +171,21 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
                 <label className="block text-sm text-neutral-600 mb-2">
                   Дата виїзду
                 </label>
-                <div className="relative w-full">
+                <div className="relative w-full h-[52px] rounded-sm border border-neutral-200 bg-white">
                   <input
-                    ref={checkOutInputRef}
                     type="date"
                     min={minCheckOut.toISOString().split('T')[0]}
                     value={checkOut.toISOString().split('T')[0]}
                     onChange={(e) => setCheckOut(new Date(e.target.value))}
-                    className="luxury-input bg-white h-[52px] w-full"
+                    className="absolute inset-0 z-10 h-full w-full opacity-0 cursor-pointer appearance-none"
                     style={{ colorScheme: 'light' }}
                   />
                   <div 
-                    className="absolute inset-0 cursor-pointer"
-                    onClick={() => checkOutInputRef.current?.showPicker()}
-                  />
+                    className="absolute inset-0 flex items-center justify-between px-4 text-neutral-900 text-base pointer-events-none"
+                  >
+                    <span>{checkOutDisplay}</span>
+                    <Calendar className="w-4 h-4 text-neutral-500" aria-hidden="true" />
+                  </div>
                 </div>
               </div>
 
@@ -176,13 +218,38 @@ export default function BookingModal({ isOpen, onClose }: BookingModalProps) {
 
               {/* Submit Button */}
               <button
-                onClick={() => {
-                  onClose();
-                }}
-                className="w-full h-[52px] bg-[var(--color-primary)] hover:bg-primary-900 text-white text-sm font-medium uppercase tracking-[0.1em] rounded-sm transition-colors duration-300"
+                onClick={handleSearch}
+                disabled={searchStatus !== 'idle'}
+                className="w-full h-[52px] bg-[var(--color-primary)] hover:bg-primary-900 text-white text-sm font-medium uppercase tracking-[0.1em] rounded-sm transition-colors duration-300 disabled:opacity-80 disabled:cursor-not-allowed"
               >
-                Підібрати номер
+                {searchStatus === 'loading'
+                  ? 'Пошук...'
+                  : searchStatus === 'success'
+                    ? 'Знайдено'
+                    : 'Підібрати номер'}
               </button>
+
+              <div
+                className={`grid transition-all duration-500 ease-in-out ${
+                  searchStatus !== 'idle' ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <div className="flex items-center gap-3 rounded-sm bg-neutral-100/90 p-3 text-sm">
+                    {searchStatus === 'loading' ? (
+                      <>
+                        <Loader2 className="h-4 w-4 animate-spin text-neutral-500" />
+                        <span className="text-neutral-700">AI підбирає найкращий номер для вашого відпочинку...</span>
+                      </>
+                    ) : (
+                      <>
+                        <div className="h-2 w-2 rounded-full bg-green-600" />
+                        <span className="text-neutral-700">Підходящий номер знайдено. Закриваємо вікно...</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           </motion.div>
           </motion.div>

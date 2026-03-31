@@ -319,7 +319,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
         </>
       )}
 
-      {bookingModalOpen && <BookingModal isOpen={bookingModalOpen} onClose={() => setBookingModalOpen(false)} />}
+      <BookingModal isOpen={bookingModalOpen} onClose={() => setBookingModalOpen(false)} />
     </>
   );
 }

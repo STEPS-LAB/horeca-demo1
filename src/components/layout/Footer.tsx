@@ -4,7 +4,6 @@ import { useCallback } from 'react';
 import Link from 'next/link';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
-import { useTranslations } from '@/lib/i18n/useTranslations';
 
 const footerLinks = {
   navigation: [
@@ -17,9 +16,40 @@ const footerLinks = {
   ],
 };
 
+const FOOTER_COPY = {
+  ua: {
+    description: 'Розкішний відпочинок на природі в оточенні природи',
+    navigation: 'Навігація',
+    contact: 'Контакти',
+    copyright: '© 2026 Готель. Всі права захищено.',
+    common: {
+      home: 'Головна',
+      about: 'Про нас',
+      rooms: 'Номери',
+      restaurant: 'Ресторан',
+      activities: 'Дозвілля',
+      pool: 'Басейн',
+    },
+  },
+  en: {
+    description: 'Luxury escape in nature in the heart of nature',
+    navigation: 'Navigation',
+    contact: 'Contacts',
+    copyright: '© 2026 Hotel. All rights reserved.',
+    common: {
+      home: 'Home',
+      about: 'About',
+      rooms: 'Rooms',
+      restaurant: 'Restaurant',
+      activities: 'Leisure',
+      pool: 'Pool',
+    },
+  },
+} as const;
+
 export default function Footer() {
   const { locale } = useLanguage();
-  const t = useTranslations();
+  const copy = FOOTER_COPY[locale];
 
   const isUA = locale === 'ua';
 
@@ -41,7 +71,7 @@ export default function Footer() {
               <span className="font-display text-2xl uppercase tracking-[0.32em] text-white">HOTEL</span>
             </button>
             <p className="text-neutral-400 mb-6 max-w-sm">
-              {t('footer.description')}
+              {copy.description}
             </p>
 
           </div>
@@ -49,7 +79,7 @@ export default function Footer() {
           {/* Navigation Column */}
           <div>
             <h3 className="font-display font-medium text-white mb-6">
-              {t('footer.navigation')}
+              {copy.navigation}
             </h3>
             <ul className="grid grid-cols-2 gap-x-8 gap-y-3" role="list">
               {footerLinks.navigation.map((link) => (
@@ -58,7 +88,7 @@ export default function Footer() {
                     href={link.href}
                     className="text-neutral-300 hover:text-white transition-colors duration-200"
                   >
-                    {t(`common.${link.key}`)}
+                    {copy.common[link.key as keyof typeof copy.common]}
                   </Link>
                 </li>
               ))}
@@ -68,7 +98,7 @@ export default function Footer() {
           {/* Contact Column */}
           <div>
             <h3 className="font-display font-medium text-white mb-6">
-              {t('footer.contact')}
+              {copy.contact}
             </h3>
             <ul className="space-y-4" role="list">
               <li className="flex items-start space-x-3">
@@ -109,7 +139,7 @@ export default function Footer() {
         <div className="mt-16 pt-8 border-t border-neutral-800">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-sm text-neutral-400 text-center md:text-left">
-              {t('footer.copyright')}
+              {copy.copyright}
             </p>
             <p className="text-sm text-neutral-400">
               Developed by{' '}

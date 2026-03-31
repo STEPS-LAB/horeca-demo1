@@ -1,15 +1,13 @@
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import dynamic from 'next/dynamic';
-import Header from '@/components/layout/Header';
+import HeaderDeferred from '@/components/layout/HeaderDeferred';
+import FooterDeferred from '@/components/layout/FooterDeferred';
 import MainWrapper from '@/components/layout/MainWrapper';
 import { LanguageProvider } from '@/lib/i18n/LanguageProvider';
 import { HeaderProvider } from '@/components/layout/HeaderContext';
 import ClientWidgetsLazy from '@/components/layout/ClientWidgetsLazy';
 import '@/styles/globals.css';
-
-const Footer = dynamic(() => import('@/components/layout/Footer'));
 
 const inter = Inter({
   subsets: ['latin', 'cyrillic'],
@@ -42,9 +40,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <LanguageProvider>
           <HeaderProvider>
             <div className="min-h-screen flex flex-col">
-              <Header />
+              <HeaderDeferred />
               <MainWrapper>{children}</MainWrapper>
-              <Footer />
+              <FooterDeferred />
               <ClientWidgetsLazy />
             </div>
           </HeaderProvider>

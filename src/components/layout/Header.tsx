@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '@/lib/i18n/LanguageProvider';
-import { useTranslations } from '@/lib/i18n/useTranslations';
 import { useHeader } from './HeaderContext';
 import dynamic from 'next/dynamic';
 const BookingModal = dynamic(() => import('@/components/booking/BookingModal'), { ssr: false });
@@ -19,6 +18,28 @@ const NAV_ITEMS = [
 ] as const;
 
 const MENU_ANIM_MS = 300;
+const NAV_LABELS = {
+  ua: {
+    home: 'Головна',
+    about: 'Про нас',
+    rooms: 'Номери',
+    restaurant: 'Ресторан',
+    activities: 'Дозвілля',
+    pool: 'Басейн',
+    contacts: 'Контакти',
+    bookNow: 'Забронювати',
+  },
+  en: {
+    home: 'Home',
+    about: 'About',
+    rooms: 'Rooms',
+    restaurant: 'Restaurant',
+    activities: 'Leisure',
+    pool: 'Pool',
+    contacts: 'Contacts',
+    bookNow: 'Book Now',
+  },
+} as const;
 
 interface HeaderProps {
   variant?: 'light' | 'dark';
@@ -26,7 +47,7 @@ interface HeaderProps {
 
 export default function Header({ variant: pageVariant }: HeaderProps) {
   const { locale, setLocale } = useLanguage();
-  const t = useTranslations();
+  const labels = NAV_LABELS[locale];
   const { variant: contextVariant } = useHeader();
   const [isScrolled, setIsScrolled] = useState(false);
   const [menuMounted, setMenuMounted] = useState(false);
@@ -56,11 +77,6 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setMenuOpen(true));
     });
-  }, []);
-
-  const scrollToTop = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   useEffect(() => {
@@ -167,7 +183,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
                   useDarkHeader ? 'text-[var(--color-neutral-900)]' : 'text-white'
                 }`}
               >
-                {t(`common.${key}`)}
+                {labels[key]}
                 <span className="absolute bottom-0 left-0 h-[1px] w-0 bg-[var(--color-accent)] transition-all duration-300 group-hover:w-full" />
               </Link>
             ))}
@@ -220,7 +236,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
               onClick={() => setBookingModalOpen(true)}
               className="hidden items-center justify-center rounded-sm bg-primary px-4 py-2.5 text-xs font-medium uppercase tracking-[0.14em] text-white shadow-md transition-all duration-300 hover:scale-[1.02] hover:bg-primary-900 md:inline-flex cursor-pointer"
             >
-              {t('common.bookNow')}
+              {labels.bookNow}
             </button>
 
             <button
@@ -311,7 +327,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
                   className="font-light leading-relaxed text-[var(--color-neutral-900)] tracking-[0.04em] hover:opacity-70"
                   style={{ fontWeight: 300, fontSize: '1.05rem' }}
                 >
-                  {t(`common.${key}`)}
+                  {labels[key]}
                 </a>
               ))}
             </nav>

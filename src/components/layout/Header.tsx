@@ -32,12 +32,16 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
   const [menuMounted, setMenuMounted] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [dragOffset, setDragOffset] = useState(0);
+  const isDraggingRef = useRef(false);
+  const touchStartXRef = useRef<number | null>(null);
   const isClosingRef = useRef(false);
   const headerRef = useRef<HTMLElement>(null);
 
   const handleCloseMenu = useCallback(() => {
     if (isClosingRef.current || !menuOpen) return;
     isClosingRef.current = true;
+    setDragOffset(0);
     setMenuOpen(false);
     setTimeout(() => {
       setMenuMounted(false);
@@ -47,6 +51,7 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
 
   const handleOpenMenu = useCallback(() => {
     if (isClosingRef.current) return;
+    setDragOffset(0);
     setMenuMounted(true);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => setMenuOpen(true));
@@ -91,6 +96,47 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
       document.body.style.touchAction = '';
     };
   }, [menuMounted]);
+
+  const handleMenuTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartXRef.current = touch.clientX;
+    isDraggingRef.current = true;
+  };
+
+  const handleMenuTouchMove = (e: React.TouchEvent) => {
+    if (!isDraggingRef.current || touchStartXRef.current == null) return;
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - touchStartXRef.current;
+
+    // When menu is open, allow dragging to the right to close
+    if (menuMounted && menuOpen && deltaX > 0) {
+      e.preventDefault();
+      setDragOffset(deltaX);
+      return;
+    }
+
+    // When menu is closed, detect swipe from right edge to open
+    if (!menuMounted && !menuOpen && deltaX < 0 && touchStartXRef.current > window.innerWidth - 40) {
+      const swipeDistance = Math.abs(deltaX);
+      if (swipeDistance > 50) {
+        handleOpenMenu();
+        isDraggingRef.current = false;
+        touchStartXRef.current = null;
+      }
+    }
+  };
+
+  const handleMenuTouchEnd = () => {
+    if (!isDraggingRef.current) return;
+    isDraggingRef.current = false;
+    const shouldClose = menuMounted && menuOpen && dragOffset > 60;
+    touchStartXRef.current = null;
+    if (shouldClose) {
+      handleCloseMenu();
+    } else {
+      setDragOffset(0);
+    }
+  };
 
   return (
     <>
@@ -201,11 +247,13 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
         <>
           {/* Backdrop */}
           <div
-            className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-md md:hidden ${
-              menuOpen ? 'opacity-100' : 'opacity-0'
+            className={`fixed inset-0 z-[60] bg-black/40 backdrop-blur-md md:hidden transition-opacity duration-[${MENU_ANIM_MS}ms] ${
+              menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
             }`}
             aria-hidden="true"
-            onTouchEnd={handleCloseMenu}
+            onTouchStart={handleMenuTouchStart}
+            onTouchMove={handleMenuTouchMove}
+            onTouchEnd={handleMenuTouchEnd}
             onClick={(e) => { e.preventDefault(); handleCloseMenu(); }}
           />
 
@@ -236,12 +284,23 @@ export default function Header({ variant: pageVariant }: HeaderProps) {
 
           {/* Menu Panel */}
           <aside
-            className={`fixed inset-y-0 right-0 z-[61] w-[min(88vw,320px)] bg-[var(--color-surface)] shadow-2xl md:hidden ${
+            className={`fixed inset-y-0 right-0 z-[61] w-[min(88vw,320px)] bg-[var(--color-surface)] shadow-2xl md:hidden transform transition-transform duration-[${MENU_ANIM_MS}ms] will-change-transform ${
               menuOpen ? 'translate-x-0' : 'translate-x-full'
             }`}
             role="dialog"
             aria-modal="true"
             aria-label="Menu"
+            onTouchStart={handleMenuTouchStart}
+            onTouchMove={handleMenuTouchMove}
+            onTouchEnd={handleMenuTouchEnd}
+            style={
+              dragOffset > 0
+                ? {
+                    transform: `translateX(${dragOffset}px)`,
+                    transition: 'none',
+                  }
+                : undefined
+            }
           >
             <nav className="flex flex-col gap-4 pt-24 pb-8 pl-8 pr-6" aria-label="Mobile">
               {NAV_ITEMS.map(({ key, href }) => (

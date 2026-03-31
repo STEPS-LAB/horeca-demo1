@@ -123,18 +123,12 @@ export default function Footer() {
               </a>
             </p>
             <div className="flex flex-col md:flex-row items-center justify-between w-full md:w-auto md:justify-end space-y-2 md:space-y-0 md:space-x-6">
-              <a
-                href="/privacy"
-                className="text-sm text-neutral-300 underline underline-offset-4 decoration-neutral-500 hover:decoration-white/70 hover:text-white transition-colors min-h-[48px] inline-flex items-center"
-              >
+              <span className="text-sm text-neutral-300 min-h-[48px] inline-flex items-center">
                 {isUA ? 'Політика конфіденційності' : 'Privacy Policy'}
-              </a>
-              <a
-                href="/terms"
-                className="text-sm text-neutral-300 underline underline-offset-4 decoration-neutral-500 hover:decoration-white/70 hover:text-white transition-colors min-h-[48px] inline-flex items-center"
-              >
+              </span>
+              <span className="text-sm text-neutral-300 min-h-[48px] inline-flex items-center">
                 {isUA ? 'Умови використання' : 'Terms of Use'}
-              </a>
+              </span>
             </div>
           </div>
         </div>
